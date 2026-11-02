@@ -5,6 +5,7 @@
  *                          or in memory when SENTINEL_DB=memory (tests)
  * Both speak the same SQL, so migrations and repositories are shared.
  */
+import { HttpError } from "../errors.ts";
 import { MIGRATIONS } from "./migrations.ts";
 
 export interface Db {
@@ -21,9 +22,19 @@ async function pglite(dataDir: string | undefined): Promise<Db> {
     const [{ mkdirSync }, { dirname, resolve }] = await Promise.all([import("node:fs"), import("node:path")]);
     dataDir = resolve(dataDir);
     mkdirSync(dirname(dataDir), { recursive: true });
+    if (/[\\/]OneDrive[\\/]|[\\/]Dropbox[\\/]|[\\/]iCloud/i.test(dataDir))
+      console.warn(`[db] ${dataDir} is inside a cloud-synced folder. File syncing can corrupt the embedded database; set PGLITE_DIR to a local, unsynced folder.`);
   }
-  const pg = new PGlite(dataDir);
-  await pg.waitReady;
+  let pg: InstanceType<typeof PGlite>;
+  try {
+    pg = new PGlite(dataDir);
+    await pg.waitReady;
+  } catch (e) {
+    // PGlite aborts with an opaque WASM error on a damaged data directory
+    const where = dataDir ?? "memory";
+    console.error(`[db] Could not open the embedded database at ${where}:`, e);
+    throw new HttpError(503, `The embedded database at ${where} could not be opened and is probably damaged (copied while the app was running, or modified by file sync). Stop the app, delete that folder and start again — the demo data is regenerated automatically.`);
+  }
   const query = async <T,>(text: string, params?: unknown[]) => (await pg.query<T>(text, params)).rows;
   return {
     driver: "pglite",
