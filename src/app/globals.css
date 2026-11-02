@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* ── SENTINEL X design tokens ─────────────────────────────────────────── */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "Cascadia Code", monospace;
+
+  --color-void: #05070a;
+  --color-base: #090c10;
+  --color-panel: #0e1217;
+  --color-raised: #141a21;
+  --color-line: #1d252e;
+  --color-line-strong: #2a3540;
+
+  --color-ink: #e6edf3;
+  --color-ink-2: #a7b3bf;
+  --color-ink-3: #6b7785;
+
+  --color-emerald: #10f0a0;
+  --color-emerald-dim: #0a9e6a;
+  --color-cyan: #22d3ee;
+  --color-electric: #3b82f6;
+  --color-violet: #a78bfa;
+
+  --color-sev-info: #64748b;
+  --color-sev-low: #22d3ee;
+  --color-sev-medium: #f59e0b;
+  --color-sev-high: #f97316;
+  --color-sev-critical: #ef4444;
+
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-scan: scan 3.5s linear infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+html, body {
+  background: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01", "tnum";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient background: grid + emerald/cyan glow */
+.ambient {
+  background-color: var(--color-void);
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, rgb(16 240 160 / 0.07), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgb(34 211 238 / 0.05), transparent 60%),
+    linear-gradient(rgb(255 255 255 / 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.022) 1px, transparent 1px);
+  background-size: auto, auto, 32px 32px, 32px 32px;
+}
+
+/* Glass surface */
+.glass {
+  background: linear-gradient(180deg, rgb(20 26 33 / 0.72), rgb(12 16 21 / 0.72));
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-line);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.03), 0 10px 30px -15px rgb(0 0 0 / 0.6);
+}
+
+.glow-emerald { box-shadow: 0 0 0 1px rgb(16 240 160 / 0.25), 0 0 24px -6px rgb(16 240 160 / 0.45); }
+.glow-critical { box-shadow: 0 0 0 1px rgb(239 68 68 / 0.3), 0 0 24px -6px rgb(239 68 68 / 0.55); }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-raised) 0, #1b232c 40%, var(--color-raised) 80%);
+  background-size: 800px 100%;
+  animation: var(--animate-shimmer);
+}
+
+@keyframes page-in { from { opacity: 0.4; transform: translateY(6px); } }
+.page-enter { animation: page-in 0.28s ease-out; }
+
+@keyframes row-flash { from { background-color: rgb(16 240 160 / 0.16); } to { background-color: transparent; } }
+.row-flash { animation: row-flash 1.4s ease-out 1; }
+
+.scrollbar-thin { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+
+.tnum { font-variant-numeric: tabular-nums; }
+
+::selection { background: rgb(16 240 160 / 0.25); }
+
+:focus-visible { outline: 2px solid var(--color-emerald); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

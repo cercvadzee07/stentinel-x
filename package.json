@@ -1,0 +1,39 @@
+{
+  "name": "sentinel-x",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SENTINEL X — Enterprise SIEM / SOC / NOC platform",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --no-warnings --test tests/*.test.ts",
+    "engine:report": "node --experimental-strip-types tests/tools/engine-report.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.3.4",
+    "clsx": "2.1.1",
+    "framer-motion": "12.43.0",
+    "lucide-react": "0.511.0",
+    "next": "15.3.3",
+    "pg": "^8.16.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "recharts": "2.15.3",
+    "zod": "3.25.42"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.8",
+    "@types/node": "22.15.29",
+    "@types/pg": "^8.15.4",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.5",
+    "tailwindcss": "4.1.8",
+    "typescript": "5.8.3"
+  },
+  "overrides": {
+    "react-is": "19.1.0"
+  }
+}
